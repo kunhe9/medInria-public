@@ -59,6 +59,9 @@ signals:
     void showWorkspace(QString workspace);
     void showComposer();
 
+protected:
+    void expandDetailedText(QMessageBox*);
+
 private:
     medHomepageAreaPrivate * d;
 };

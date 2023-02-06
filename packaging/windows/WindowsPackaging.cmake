@@ -34,7 +34,7 @@ endif()
 
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${MSVC_ARCH}")
 
-set(ICON_PATH "${CMAKE_SOURCE_DIR}/src/app/medInria/resources/MUSICardio_logo_small.ico")
+set(ICON_PATH "${PROJECT_SOURCE_DIR}/${WINDOW_ICON_PATH}")
 
 # Used on pinned on taskbar
 set(CPACK_PACKAGE_ICON ${ICON_PATH})
@@ -47,22 +47,22 @@ set(CPACK_NSIS_MUI_ICON ${ICON_PATH})
 set(CPACK_NSIS_MUI_UNIICON ${ICON_PATH})
 
 # Add a desktop shortcut
-set(CPACK_CREATE_DESKTOP_LINKS "MUSICardio")
+set(CPACK_CREATE_DESKTOP_LINKS "${APPLICATION_NAME}")
 
 # The icon in the Add/Remove control panel
-set(CPACK_NSIS_INSTALLED_ICON_NAME bin\\\\MUSICardio.exe)
+set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\${APPLICATION_NAME}.exe")
 
 # Add medinria to the PATH
 set(CPACK_NSIS_MODIFY_PATH "ON")
 
 # Add shortcut in the Startup menu
-set(CPACK_PACKAGE_EXECUTABLES "MUSICardio" "MUSICardio")
+set(CPACK_PACKAGE_EXECUTABLES "${APPLICATION_NAME}" "${APPLICATION_NAME}")
 
 # Add a link to the application website in the Startup menu.
-set(CPACK_NSIS_MENU_LINKS "https://www.ihu-liryc.fr/fr/music/" "Homepage for MUSICardio") 
+set(CPACK_NSIS_MENU_LINKS "${PACKAGE_VENDOR}" "Homepage for ${APPLICATION_NAME}") 
 
 # Run medInria after installation
-set(CPACK_NSIS_MUI_FINISHPAGE_RUN "MUSICardio.exe")
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${APPLICATION_NAME}.exe")
 
 # Delete the Startup menu link after uninstallation
 set(CPACK_NSIS_DELETE_ICONS_EXTRA "
@@ -89,10 +89,27 @@ if (NOT PRIVATE_PLUGINS_LEGACY_DIRS STREQUAL "")
     endforeach()
 endif()
 
-set(APP "\${CMAKE_INSTALL_PREFIX}/bin/MUSICardio.exe")
-set(QT_BINARY_DIR "${Qt5_DIR}/../../../bin")
-set(QT_PLUGINS_DIR "${Qt5_DIR}/../../../plugins")
-set(MEDINRIA_FILES "${medInria_ROOT}/Release/bin")
+
+if (NOT EXTERNAL_PROJECT_PLUGINS_LEGACY_DIRS STREQUAL "")
+    foreach(pluginpath ${EXTERNAL_PROJECT_PLUGINS_LEGACY_DIRS})
+        file(TO_CMAKE_PATH ${pluginpath} pluginpath)
+# Add an extra slash, otherwise we copy the folder, not its content
+        set(pluginpath "${pluginpath}/")
+        message("Adding ${pluginpath} to the plugins dirs...")
+        install(DIRECTORY ${pluginpath} DESTINATION bin/plugins_legacy COMPONENT Runtime FILES_MATCHING PATTERN "*${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    endforeach()
+endif()
+
+
+set(CONFIG_MODE $<$<CONFIG:debug>:Debug>$<$<CONFIG:release>:Release>$<$<CONFIG:MinSizeRel>:MinSizeRel>$<$<CONFIG:RelWithDebInfo>:RelWithDebInfo>)
+ 
+
+set(APP "\${CMAKE_INSTALL_PREFIX}/bin/${APPLICATION_NAME}.exe")
+
+set(QT_BINARY_DIR "${Qt${QT_VERSION_MAJOR}_DIR}/../../../bin")
+set(QT_PLUGINS_DIR "${Qt${QT_VERSION_MAJOR}_DIR}/../../../plugins")
+set(QT_TOOLS_DIR "${Qt${QT_VERSION_MAJOR}_DIR}/../../../../../Tools")
+set(MEDINRIA_FILES "${medInria_DIR}/bin")
 
 list(APPEND 
   libSearchDirs 

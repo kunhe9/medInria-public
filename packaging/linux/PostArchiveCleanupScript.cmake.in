@@ -24,7 +24,7 @@ endif()
 file(GLOB BINARIES RELATIVE ${DIR}/bin/ ${DIR}/bin/*)
 
 foreach(bin ${BINARIES})
-  if(NOT bin MATCHES "^MUS")
+  if(NOT bin MATCHES "^@APPLICATION_NAME@")
     file(REMOVE ${DIR}/bin/${bin})
   endif()
 endforeach()
