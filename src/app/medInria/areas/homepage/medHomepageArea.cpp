@@ -19,6 +19,11 @@
 #include <medSettingsManager.h>
 #include <medWorkspaceFactory.h>
 
+#include <QtGlobal>
+
+#define VAL(str) #str
+#define TOSTRING(str) VAL(str)
+
 class medHomepageAreaPrivate
 {
 public:
@@ -38,17 +43,49 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     //Setup navigation widget (with buttons for accessing available workspaces)
     d->navigationWidget = new QWidget ( this );
 
-    //Setup the widget where the general information are displayed
-    d->infoWidget = new QWidget ( this );
-    d->infoWidget->setMinimumSize(400, 400);
+    QHBoxLayout *descriptionLayout = new QHBoxLayout(d->descriptionWidget);
+    descriptionLayout->setContentsMargins(0, 0, 0, 0);
 
-    //Setup the widget with about, settings, plugins and documentation buttons
-    d->userWidget = new QWidget ( this );
 
-    //Setup the about container widget (with a QTabWidget inside)
-    d->aboutWidget = new QWidget ( this );
-    d->aboutWidget->setMinimumSize(400, 400);
-    d->aboutWidget->hide();
+    // Themes
+    QVariant themeChosen = medSettingsManager::instance()->value("startup","theme");
+    int themeIndex = themeChosen.toInt();
+    QString qssLogoName;
+    switch (themeIndex)
+    {
+        case 0:
+        default:
+        {
+            qssLogoName = TOSTRING(LARGE_LOGO_DARK_THEME);
+            break;
+        }
+        case 1:
+        case 2:
+        {
+            qssLogoName = TOSTRING(LARGE_LOGO_LIGHT_THEME);
+            break;
+        }
+    }
+    QPixmap medLogo(qssLogoName);
+    medLogo = medLogo.scaled(356, 102, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    d->applicationLabel = new QLabel(this);
+    QPixmap applicationLogo = getApplicationLogoPixmap();
+    d->applicationLabel->setPixmap(applicationLogo);
+    descriptionLayout->addWidget(d->applicationLabel);
+    descriptionLayout->setSpacing(13);
+
+    d->textEdit = new QTextEdit(this);
+    QFile descriptionFile(QString(TOSTRING(DESCRIPTION_HOMEPAGE)));
+    descriptionFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream descriptionStream(&descriptionFile);
+    descriptionStream.setCodec("UTF-8");
+    d->textEdit->setHtml(descriptionStream.readAll());
+    d->textEdit->setReadOnly(true);
+    d->textEdit->setFocusPolicy(Qt::NoFocus);
+
+    d->textEdit->setMaximumHeight(70);
+    d->textEdit->setStyleSheet("background : transparent;");
+    descriptionLayout->addWidget(d->textEdit);
 
     //User widget content with settings, about and help buttons
     QHBoxLayout * userButtonsLayout = new QHBoxLayout(d->userWidget);
@@ -496,7 +533,109 @@ void medHomepageArea::onShowBrowser()
     emit showBrowser();
 }
 
-void medHomepageArea::onShowWorkspace ( QString workspace )
+void medHomepageArea::onShowAbout()
+{
+    QFile file(TOSTRING(ABOUT_FILE));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText(text);
+    msgBox.exec();
+}
+
+/**
+ * @brief Search the "Show Details..." button and click it to expand the text
+ * 
+ * @param msgBox 
+ */
+void medHomepageArea::expandDetailedText(QMessageBox *msgBox)
+{
+    foreach (auto *button, msgBox->buttons())
+    {
+        if (msgBox->buttonRole(button) == QMessageBox::ActionRole)
+        {
+            button->click();
+            break;
+        }
+    }
+}
+
+void medHomepageArea::onShowAuthors()
+{
+    QFile file(":authors.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    std::string str = TOSTRING(ADDITIONAL_AUTHORS_LIST);
+    str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+    QString additionalAuthors = QString::fromStdString(str);
+    if (!additionalAuthors.isEmpty())
+    {   
+        additionalAuthors.replace(QString(","), QString("\n"));
+        text += "\n *** " + QString(TOSTRING(APPLICATION_NAME)) + " ***\n";
+        text += additionalAuthors;
+    }
+
+    QMessageBox msgBox;
+    msgBox.setText("List of the application authors:            ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+void medHomepageArea::onShowReleaseNotes()
+{
+    QFile file(TOSTRING(RELEASE_NOTES));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText("Here is the release notes with the history of the application:            ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+void medHomepageArea::onShowLicense()
+{
+    QFile file(TOSTRING(LICENSE_FILE));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText("Here is the application license:                           ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+void medHomepageArea::onShowExtLicenses()
+{
+    QFile file(TOSTRING(LICENSE_EXTERNAL_FILE));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText("Here are the external library licenses:                           ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+void medHomepageArea::onShowDatabase()
+{
+    medDatabaseSettingsWidget dialog(this);
+    dialog.exec();
+}
+
+void medHomepageArea::onShowAreaSettings()
+{
+    medStartupSettingsWidget dialog(this);
+    dialog.exec();
+}
+
+void medHomepageArea::onShowWorkspace(QString workspace)
 {
     emit showWorkspace ( workspace );
 }
@@ -533,6 +672,21 @@ void medHomepageArea::onShowSettings()
     d->stackedWidget->setCurrentWidget(d->settingsWidget);
 
     d->settingsWidget->setFocus();
+    QPixmap applicationLogo;
+    int themeIndex = medSettingsManager::instance()->value("startup","theme").toInt();
+
+    switch (themeIndex)
+    {
+    case 0:
+    default:
+        applicationLogo = QPixmap(":pixmaps/medInria-logo-theme-dark.png");
+        break;
+    case 1:
+    case 2:
+        applicationLogo = QPixmap(":pixmaps/medInria-logo-theme-light.png");
+        break;
+    }
+    return applicationLogo;
 }
 
 void medHomepageArea::openLogDirectory()

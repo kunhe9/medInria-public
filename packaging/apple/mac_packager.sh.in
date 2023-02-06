@@ -15,6 +15,7 @@ if [[ -n "$dmgs_found" ]]; then
     find . -maxdepth 1 -type f -name "*.dmg" -exec rm -f {} +
 fi
 
+<<<<<<< HEAD
 # Preparation of the new bundle in TmpInstall
 echo "# Prepare the bundle"
 BUNDLE="MUSICardio"
@@ -22,15 +23,28 @@ APP_EXE="${BUNDLE}.app/Contents/MacOS/${BUNDLE}"
 PLUGIN_DIR="${BUNDLE}.app/Contents/PlugIns"
 FRAMEWORK_DIR="${BUNDLE}.app/Contents/Frameworks"
 CERT_NAME="MDS-certificate"
+=======
+# 1. build medInria
+# 2. build medInria-plugins as well as your desired own plugins
+# 3. chmod u+x mac_pacakger.sh
+# 4. run mac_pacakger.sh with each argument being a script to package your plugins, e.g. : ./mac_packager.sh ${Plugins_Build_Dir}/mac_visages_plugins_packager.sh
+
+# The bundle medInria.app will contain all plugins and will be standalone, packaged into MedINRIA.dmg in the install dir
+
+cd @medInria_BINARY_DIR@/bin
+
+\rm -fr TmpInstall
+mkdir TmpInstall
+cp -r @APPLICATION_NAME@.app TmpInstall
+>>>>>>> 71e8c4356 ([Custom] configure setting file to customize medInria 4)
 
 cd @PROJECT_BINARY_DIR@
 rm -fr TmpInstall
 mkdir -p TmpInstall/${BUNDLE}.app/Contents/{MacOS,Resources,Frameworks}
 cd TmpInstall
 
-@CMAKE_COMMAND@ -E copy \
-    "@medInria_ROOT@/bin/${BUNDLE}.app/Contents/MacOS/${BUNDLE}" \
-    "${BUNDLE}.app/Contents/MacOS/"
+
+@Qt5_DIR@/../../../bin/macdeployqt @APPLICATION_NAME@.app -appstore-compliant
 
 @CMAKE_COMMAND@ -E copy \
     "@medInria_ROOT@/bin/${BUNDLE}.app/Contents/Info.plist" \
@@ -52,8 +66,7 @@ for i in $*; do
     injectDirs="$injectDirs -inject-dir=$i"
 done
 
-mkdir -p python_plugins
-injectDirs="$injectDirs -inject-dir=@PROJECT_BINARY_DIR@/TmpInstall/python_plugins"
+@dtk_DIR@/bin/dtkDeploy @APPLICATION_NAME@.app $injectDirs &>/dev/null
 
 python_libs=''
 for python_lib in @medInria_ROOT@/bin/python_plugins/*; do
@@ -74,15 +87,10 @@ NEW_PREFIX='@executable_path/../PlugIns'        # new relative path
 candidate_libs=($(ls /usr/lib/libz*.dylib 2>/dev/null)) # There are some path errors with libz which is a system lib
 SYSTEM_Z=${candidate_libs[0]}
 
-find "$PLUGIN_DIR" -type f -name "*.dylib" | while read -r lib; do
-    otool -L "$lib" 2>/dev/null | tail -n +2 | while read -r line; do
-        dep=$(echo "$line" | awk '{print $1}')
 
-        # Solving libz wrong paths
-        if [[ "$dep" == *"/libz."*".dylib" ]] || [[ "$dep" == *"/libz.dylib" ]]; then
-            install_name_tool -change "$dep" "$SYSTEM_Z" "$lib"
-            continue
-        fi
+devName=`hdiutil attach -readwrite -noverify -noautoopen MedinriaPackage.sparseimage | egrep '^/dev/' | sed 1q | awk '{print $1}'`
+diskutil rename "medInria base" "@APPLICATION_NAME@ @MEDINRIA_SUPERBUILD_VERSION@"
+\cp -rf @medInria_BINARY_DIR@/bin/TmpInstall/@APPLICATION_NAME@.app /Volumes/"@APPLICATION_NAME@ @MEDINRIA_SUPERBUILD_VERSION@"/
 
         # Solving absolute paths in plugins
         if [[ "$dep" == "$OLD_PREFIX"* ]]; then

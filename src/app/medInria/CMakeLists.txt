@@ -13,7 +13,18 @@
 #
 ################################################################################
 
-set(TARGET_NAME MUSICardio)
+set(TARGET_NAME ${APPLICATION_NAME})
+
+## #############################################################################
+## External settings
+## #############################################################################
+
+if(DEFINED SETTINGS_QRC_DIRECTORY) 
+  if(SETTINGS_QRC_DIRECTORY STREQUAL "")
+  else()
+    set(SETTINGS_QRC_DIRECTORY_RELATIVE "../../../${SETTINGS_QRC_DIRECTORY}")
+  endif()
+endif()
 
 ## #############################################################################
 ## List Sources

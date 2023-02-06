@@ -33,6 +33,9 @@
 #include <medVisualizationWorkspace.h>
 #include <medWorkspaceFactory.h>
 
+#define VAL(str) #str
+#define TOSTRING(str) VAL(str)
+
 class medApplicationPrivate
 {
 public:
@@ -51,33 +54,11 @@ medApplication::medApplication(int & argc, char**argv) :
 {
     d->mainWindow = nullptr;
 
-    // Themes
-    QVariant themeChosen = medSettingsManager::instance().value("startup","theme");
-    int themeIndex = themeChosen.toInt();
-    QPixmap splashLogo;
-    switch (themeIndex)
-    {
-        case 0:
-        case 1:
-        case 2:
-        default:
-        {
-            splashLogo.load(":MUSICardio-2023-lightfont-notext-darkback-margin10.png");
-            break;
-        }
-        case 3:
-        case 4:
-        {
-            splashLogo.load(":MUSICardio-2023-darkfont-notext-whiteback-margin10.png");
-            break;
-        }
-    }
-    splashLogo = splashLogo.scaled(719, 87, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    d->splashScreen = new QSplashScreen(splashLogo,
-                                        Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
-    d->splashScreen->setAttribute(Qt::WA_DeleteOnClose, true);
-    d->splashScreen->show();
-    this->processEvents();
+    this->setApplicationName(TOSTRING(APPLICATION_NAME));
+    this->setApplicationVersion(MEDINRIA_VERSION);
+    this->setOrganizationName(TOSTRING(ORGANIZATION_NAME));
+    this->setOrganizationDomain(TOSTRING(ORGANIZATION_DOMAIN));
+    this->setWindowIcon(QIcon(TOSTRING(WINDOW_ICON)));
 
     this->setApplicationName(PROJECT_NAME); /*Beware, change database path*/
     this->setApplicationVersion(MEDINRIA_VERSION);
@@ -229,4 +210,73 @@ void medApplication::initialize()
         medCore::pluginManager::initialize(pluginsPath);
     else
         medCore::pluginManager::initialize(defaultPath);
+}
+
+/**
+ * @brief Get back the previous screen used to display the application
+ * 
+ * @return QScreen 
+ */
+QScreen* medApplication::getPreviousScreen()
+{
+    medSettingsManager *manager = medSettingsManager::instance();
+    int currentScreen = 0;
+    QVariant currentScreenQV = manager->value("medMainWindow", "currentScreen");
+    if (!currentScreenQV.isNull())
+    {
+        currentScreen = currentScreenQV.toInt();
+
+        // If the previous used screen has been removed, initialization
+        if (currentScreen >= QApplication::desktop()->screenCount())
+        {
+            currentScreen = 0;
+        }
+    }
+    return screens().at(currentScreen);
+}
+
+/**
+ * @brief Set the Qt splash screen to the application logo.
+ * 
+ */
+void medApplication::initializeSplashScreen()
+{
+    d->splashScreen = new QSplashScreen(getPreviousScreen(), QPixmap(":/pixmaps/medInria-splash.png"),
+        Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+    d->splashScreen->setAttribute(Qt::WA_DeleteOnClose, true);
+    d->splashScreen->show();
+    this->processEvents();
+}
+
+/**
+ * @brief Parse the theme file chosen by user in settings.
+ * 
+ */
+void medApplication::initializeThemes()
+{
+    QApplication::setStyle(QStyleFactory::create("fusion"));
+
+    int themeIndex = medSettingsManager::instance()->value("startup","theme").toInt();
+    QString qssFile;
+    switch (themeIndex)
+    {
+    case 0:
+    default:
+        qssFile = ":/dark.qss";
+        QIcon::setThemeName(QStringLiteral("dark"));
+        break;
+    case 1:
+        qssFile = ":/grey.qss";
+        QIcon::setThemeName(QStringLiteral("light"));
+        break;
+    case 2:
+        qssFile = ":/light.qss";
+        QIcon::setThemeName(QStringLiteral("light"));
+        break;
+    }
+    medStyleSheetParser parser(dtkReadFile(qssFile));
+    this->setStyleSheet(parser.result());
+
+    // Unblur icons for instance on retina screens
+    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); 
 }
