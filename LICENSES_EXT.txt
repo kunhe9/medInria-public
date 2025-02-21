@@ -88,3 +88,7 @@ license: https://github.com/zaphoyd/websocketpp/blob/master/COPYING
 * zlib
 sources: https://github.com/madler/zlib
 license: https://github.com/madler/zlib/blob/master/README
+
+* onnxruntime 
+sources: https://github.com/microsoft/onnxruntime
+license: https://github.com/microsoft/onnxruntime/blob/main/LICENSE

@@ -112,6 +112,7 @@ if(USE_MUSIC_PLUGINS)
         tetgen
         ZLIB
         quazip
+        onnxruntime
         )
 endif()
 
