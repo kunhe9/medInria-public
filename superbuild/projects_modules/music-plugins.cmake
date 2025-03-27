@@ -42,7 +42,7 @@ function(music_plugins_project)
     if (NOT USE_SYSTEM_${external_project})
 
         set(git_url ${GITHUB_PREFIX}kunhe9/music.git)
-        set(git_tag spotmapping)
+        set(git_tag ubuntu24)
 
         set(cmake_args
             ${ep_common_cache_args}
@@ -69,7 +69,7 @@ function(music_plugins_project)
             -Dtetgen_ROOT:PATH=${tetgen_ROOT}
             -DQuaZip-Qt5_ROOT:PATH=${quazip_ROOT}
             -DZLIB_ROOT:PATH=${ZLIB_ROOT}
-            -DONNXRUNTIME_DIR:FILEPATH=${onnxruntime_DIR}
+            -DONNXRUNTIME_ROOT:PATH=${onnxruntime_ROOT}
             -DUSE_RealTimeWorkspace=${USE_RealTimeWorkspace}
             )
 

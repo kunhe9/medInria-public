@@ -108,6 +108,7 @@ list(APPEND
   ${dtk_ROOT}/bin/Release
   ${RPI_ROOT}/bin/Release
   ${ZLIB_ROOT}/Release
+  ${onnxruntime_ROOT}/bin/Release
   )
 
 set(CPACK_INSTALL_CMAKE_PROJECTS
@@ -124,6 +125,7 @@ file(GLOB_RECURSE dcm_files LIST_DIRECTORIES true \"${QtDCM_ROOT}/bin/*.dll\")
 file(GLOB_RECURSE ttk_files LIST_DIRECTORIES true \"${TTK_ROOT}/bin/*.dll\")
 file(GLOB_RECURSE qt5_files LIST_DIRECTORIES true \"${QT_BINARY_DIR}/*.dll\")
 file(GLOB_RECURSE zlib_files LIST_DIRECTORIES true \"${ZLIB_ROOT}/*.dll\")
+file(GLOB_RECURSE onnxruntime_files LIST_DIRECTORIES true \"${onnxruntime_ROOT}/bin/*.dll\")
 list(APPEND files \${itk_files})
 list(APPEND files \${vtk_files})
 list(APPEND files \${dtk_files})
@@ -131,6 +133,7 @@ list(APPEND files \${dcm_files})
 list(APPEND files \${ttk_files})
 list(APPEND files \${qt5_files})
 list(APPEND files \${zlib_files})
+list(APPEND files \${onnxruntime_files})
 
 file(INSTALL ${MEDINRIA_FILES}/
     DESTINATION \${CMAKE_INSTALL_PREFIX}/bin/

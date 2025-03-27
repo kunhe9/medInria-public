@@ -19,7 +19,6 @@ set(ep onnxruntime)
 ## #############################################################################
 
 list(APPEND ${ep}_dependencies 
-  ""
   )
 
 ## #############################################################################
@@ -39,9 +38,10 @@ if (NOT USE_SYSTEM_${ep})
 ## #############################################################################
 
 
-set(git_url ${GITHUB_PREFIX}microsoft/onnxruntime.git)
-set(git_tag v1.15.1)
+set(git_url ${GITHUB_PREFIX}Microsoft/onnxruntime.git)
+set(git_tag main)
 
+message("### GITHUB PREFIX ${GITHUB_PREFIX}")
 
 ## #############################################################################
 ## Add specific cmake arguments for configuration step of the project
@@ -62,7 +62,9 @@ set(git_tag v1.15.1)
 ## Add external-project
 ## #############################################################################
 epComputPath(${ep})
-#./build.sh --config RelWithDebInfo --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync
+#./build.sh --config RelWithDebInfo --build_shared_lib --parallel --compile_no_warning_as_error --skip_submodule_sync --skip_tests
+
+# message("### EIGEN ROOT ${eigen_ROOT}")
 
 ExternalProject_Add(${ep}
   PREFIX ${EP_PATH_SOURCE}
@@ -80,6 +82,8 @@ ExternalProject_Add(${ep}
       --parallel
       --compile_no_warning_as_error
       --skip_submodule_sync
+      --build_dir ${build_path}
+      --skip_tests
   DEPENDS ${${ep}_dependencies}
   INSTALL_COMMAND ""
   BUILD_ALWAYS 1
@@ -90,7 +94,7 @@ ExternalProject_Add(${ep}
 ## #############################################################################
 
 ExternalProject_Get_Property(${ep} binary_dir)
-set(${ep}_DIR ${binary_dir} PARENT_SCOPE)
+set(${ep}_ROOT ${binary_dir} PARENT_SCOPE)
 
 endif() #NOT USE_SYSTEM_ep
 
