@@ -1,0 +1,37 @@
+From a21198bdda6685ae4dbc44e2b03e9bfd432e2e57 Mon Sep 17 00:00:00 2001
+From: kunhe9 <kun.he@u-bordeaux.fr>
+Date: Fri, 28 Mar 2025 13:31:39 +0100
+Subject: [PATCH] VTK
+
+---
+ IO/Image/vtkSEPReader.h                                          | 1 +
+ ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/IO/Image/vtkSEPReader.h b/IO/Image/vtkSEPReader.h
+index 83d127a41e..203021b848 100644
+--- a/IO/Image/vtkSEPReader.h
++++ b/IO/Image/vtkSEPReader.h
+@@ -27,6 +27,7 @@
+ 
+ #include <array>  // for std::array
+ #include <string> // for std::string
++#include <cstdint> // for std::uint8_t and std::uint32_t
+ 
+ namespace details
+ {
+diff --git a/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp b/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
+index 6267684218..163da4309a 100644
+--- a/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
++++ b/ThirdParty/libproj/vtklibproj/src/proj_json_streaming_writer.hpp
+@@ -33,6 +33,7 @@
+ 
+ #include <vector>
+ #include <string>
++#include <cstdint>
+ 
+ #define CPL_DLL
+ 
+-- 
+2.43.0
+
