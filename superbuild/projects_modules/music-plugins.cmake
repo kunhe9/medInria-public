@@ -41,8 +41,8 @@ function(music_plugins_project)
 
     if (NOT USE_SYSTEM_${external_project})
 
-        set(git_url ${GITHUB_PREFIX}mathildemerle/music.git)
-        set(git_tag qwtPlot)
+        set(git_url ${GITHUB_PREFIX}Inria-Asclepios/music.git)
+        set(git_tag 4.1)
 
 ## #############################################################################
 ## Add specific cmake arguments for configuration step of the project
