@@ -54,7 +54,6 @@ endif()
 if (MSVC)
     set(${ep}_cxx_flags "${${ep}_cxx_flags} /Zc:__cplusplus")
 endif()
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(${ep}_cxx_flags "${${ep}_cxx_flags} -Wno-inconsistent-missing-override")
 endif()
@@ -73,6 +72,8 @@ set(cmake_args
   -DITK_ROOT:FILEPATH=${ITK_ROOT}
   -DDCMTK_ROOT:FILEPATH=${DCMTK_ROOT}
   )
+#   -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
+#   -DCMAKE_CXX_EXTENSIONS=OFF
 
 ## #############################################################################
 ## Add external-project
