@@ -675,7 +675,6 @@ void medVtkViewNavigator::showAnnotatedCube(bool show)
 
 void medVtkViewNavigator::changeOrientation(medImageView::Orientation orientation)
 {
-    std::cout<<"### medVtkViewNavigator::changeOrientation"<<std::endl;
     // prevent from vtk event send by the resend by the observer. - RDE
     this->zoomParameter()->blockSignals(true);
     this->cameraParameter()->blockSignals(true);

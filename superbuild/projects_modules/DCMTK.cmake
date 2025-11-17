@@ -66,9 +66,6 @@ if (MSVC)
     set(${ep}_cxx_flags "${${ep}_cxx_flags} /Zc:__cplusplus")
 endif()
 
-message("### DCMTK CMAKE_MSVC_RUNTIME_LIBRARY ${CMAKE_MSVC_RUNTIME_LIBRARY} ")
-message("### DCMTK CMAKE_CXX_STANDARD ${CMAKE_CXX_STANDARD} ")
-
 set(cmake_args
   ${ep_common_cache_args}
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE_externals_projects}
