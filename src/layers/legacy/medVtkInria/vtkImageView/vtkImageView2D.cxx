@@ -399,7 +399,6 @@ the CornerAnnotation are modified.
 */
 void vtkImageView2D::UpdateOrientation()
 {
-  std::cout<<"### vtkImageView2D::UpdateOrientation"<<std::endl;
   // Store zoom and pan
   double zoom = this->GetZoom();
   double pan[2];
