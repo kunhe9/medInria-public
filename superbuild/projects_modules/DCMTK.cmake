@@ -94,7 +94,6 @@ set(cmake_args
   -DDCMTK_WITH_ICONV:BOOL=OFF
   -DDCMTK_FORCE_FPIC_ON_UNIX:BOOL=ON
   )
-#  -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
 
 ## #############################################################################
 ## Add external-project

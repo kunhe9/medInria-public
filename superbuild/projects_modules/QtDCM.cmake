@@ -72,8 +72,6 @@ set(cmake_args
   -DITK_ROOT:FILEPATH=${ITK_ROOT}
   -DDCMTK_ROOT:FILEPATH=${DCMTK_ROOT}
   )
-#   -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
-#   -DCMAKE_CXX_EXTENSIONS=OFF
 
 ## #############################################################################
 ## Add external-project
