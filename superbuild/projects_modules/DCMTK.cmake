@@ -54,7 +54,6 @@ ep_GeneratePatchCommand(${ep} ${ep}_PATCH_COMMAND DCMTK.patch)
 if (WIN32)
   set(DCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS ON)
 else()
-  set(BUILD_SHARED_LIBS_${ep} ${BUILD_SHARED_LIBS})
   set(DCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS OFF)
 endif()
 
