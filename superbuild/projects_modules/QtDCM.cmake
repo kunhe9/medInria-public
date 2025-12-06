@@ -54,6 +54,11 @@ endif()
 if (MSVC)
     set(${ep}_cxx_flags "${${ep}_cxx_flags} /Zc:__cplusplus")
 endif()
+
+if (MSVC)
+    set(${ep}_cxx_flags "${${ep}_cxx_flags} /Zc:__cplusplus")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(${ep}_cxx_flags "${${ep}_cxx_flags} -Wno-inconsistent-missing-override")
 endif()
