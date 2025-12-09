@@ -120,6 +120,11 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    QAction* getCornerAction(QString);
+    void setFullscreenOn(QAction*);
+    void setFullscreenOff(QAction*);
+    void expandDetailedText(QMessageBox*);
+
 private:
     medMainWindowPrivate *d;
 };

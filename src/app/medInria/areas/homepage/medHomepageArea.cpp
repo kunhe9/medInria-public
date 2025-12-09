@@ -46,7 +46,6 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     QHBoxLayout *descriptionLayout = new QHBoxLayout(d->descriptionWidget);
     descriptionLayout->setContentsMargins(0, 0, 0, 0);
 
-
     // Themes
     QVariant themeChosen = medSettingsManager::instance()->value("startup","theme");
     int themeIndex = themeChosen.toInt();
@@ -82,7 +81,6 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     d->textEdit->setHtml(descriptionStream.readAll());
     d->textEdit->setReadOnly(true);
     d->textEdit->setFocusPolicy(Qt::NoFocus);
-
     d->textEdit->setMaximumHeight(70);
     d->textEdit->setStyleSheet("background : transparent;");
     descriptionLayout->addWidget(d->textEdit);
@@ -545,108 +543,6 @@ void medHomepageArea::initPage()
 void medHomepageArea::onShowBrowser()
 {
     emit showBrowser();
-}
-
-void medHomepageArea::onShowAbout()
-{
-    QFile file(TOSTRING(ABOUT_FILE));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString text = file.readAll();
-
-    QMessageBox msgBox;
-    msgBox.setText(text);
-    msgBox.exec();
-}
-
-/**
- * @brief Search the "Show Details..." button and click it to expand the text
- * 
- * @param msgBox 
- */
-void medHomepageArea::expandDetailedText(QMessageBox *msgBox)
-{
-    foreach (auto *button, msgBox->buttons())
-    {
-        if (msgBox->buttonRole(button) == QMessageBox::ActionRole)
-        {
-            button->click();
-            break;
-        }
-    }
-}
-
-void medHomepageArea::onShowAuthors()
-{
-    QFile file(":authors.txt");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString text = file.readAll();
-
-    std::string str = TOSTRING(ADDITIONAL_AUTHORS_LIST);
-    str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
-    QString additionalAuthors = QString::fromStdString(str);
-    if (!additionalAuthors.isEmpty())
-    {   
-        additionalAuthors.replace(QString(","), QString("\n"));
-        text += "\n *** " + QString(TOSTRING(APPLICATION_NAME)) + " ***\n";
-        text += additionalAuthors;
-    }
-
-    QMessageBox msgBox;
-    msgBox.setText("List of the application authors:            ");
-    msgBox.setDetailedText(text);
-    expandDetailedText(&msgBox);
-    msgBox.exec();
-}
-
-void medHomepageArea::onShowReleaseNotes()
-{
-    QFile file(TOSTRING(RELEASE_NOTES));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString text = file.readAll();
-
-    QMessageBox msgBox;
-    msgBox.setText("Here is the release notes with the history of the application:            ");
-    msgBox.setDetailedText(text);
-    expandDetailedText(&msgBox);
-    msgBox.exec();
-}
-
-void medHomepageArea::onShowLicense()
-{
-    QFile file(TOSTRING(LICENSE_FILE));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString text = file.readAll();
-
-    QMessageBox msgBox;
-    msgBox.setText("Here is the application license:                           ");
-    msgBox.setDetailedText(text);
-    expandDetailedText(&msgBox);
-    msgBox.exec();
-}
-
-void medHomepageArea::onShowExtLicenses()
-{
-    QFile file(TOSTRING(LICENSE_EXTERNAL_FILE));
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString text = file.readAll();
-
-    QMessageBox msgBox;
-    msgBox.setText("Here are the external library licenses:                           ");
-    msgBox.setDetailedText(text);
-    expandDetailedText(&msgBox);
-    msgBox.exec();
-}
-
-void medHomepageArea::onShowDatabase()
-{
-    medDatabaseSettingsWidget dialog(this);
-    dialog.exec();
-}
-
-void medHomepageArea::onShowAreaSettings()
-{
-    medStartupSettingsWidget dialog(this);
-    dialog.exec();
 }
 
 void medHomepageArea::onShowWorkspace(QString workspace)
