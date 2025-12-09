@@ -62,8 +62,6 @@ if (USE_OSPRay)
   add_definitions(-DMED_USE_OSPRAY_4_VR_BY_CPU)
 endif()
 
-find_package(DCMTK REQUIRED NO_MODULE)
-
 ## #############################################################################
 ## List Sources
 ## #############################################################################
