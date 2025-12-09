@@ -141,7 +141,8 @@ bool medStartupSettingsWidget::write()
 {
     medSettingsManager &mnger = medSettingsManager::instance();
     mnger.setValue("startup", "fullscreen", d->startInFullScreen->isChecked());
-    mnger.setValue("startup", "default_starting_area", d->defaultStartingArea->currentText());
+    // mnger.setValue("startup", "default_starting_area", d->defaultStartingArea->currentText());
+    mnger.setValue("startup", "default_starting_area", "SPOT");
     mnger.setValue("startup", "theme", d->theme->currentIndex());
     mnger.setValue("startup", "default_segmentation_speciality", d->defaultSegmentationSpeciality->currentText());
     return true;

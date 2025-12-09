@@ -20,7 +20,7 @@
 
 option(BUILD_ALL_PLUGINS
   "Build all Medinria plugins (overrides individual selections)"
-  ON
+  OFF
   )
 
 option(BUILD_EXAMPLE_PLUGINS
@@ -41,51 +41,51 @@ option(BUILD_COMPOSITEDATASET_PLUGIN
 ## ADD here any new plugin with a default compilation value,
 ## you want to include in the build,
 set(PLUGIN_LIST
-  legacy/diffeomorphicDemons                                             ON  
-  legacy/iterativeClosestPoint                                           ON
-  legacy/itkDataDiffusionGradientList                                    ON
+  legacy/diffeomorphicDemons                                             OFF  
+  legacy/iterativeClosestPoint                                           OFF
+  legacy/itkDataDiffusionGradientList                                    OFF
   legacy/itkDataImage                                                    ON
-  legacy/itkDataSHImage                                                  ON
-  legacy/itkDataTensorImage                                              ON
-  legacy/itkFilters                                                      ON
-  legacy/itkINRDataImageReader                                           ON
-  legacy/itkINRDataImageWriter                                           ON
-  legacy/itkProcessRegistrationOptimus                                   ON
-  legacy/LCCLogDemons                                                    ON  
-  legacy/manualRegistration                                              ON
-  legacy/medAlgorithmPaint                                               ON
-  legacy/medBinaryOperation                                              ON
-  legacy/medCreateMeshFromMask                                           ON
-  legacy/medFilteringWorkspaceL                                          ON
-  legacy/medMaskApplication                                              ON
-  legacy/medMeshingWorkspace                                             ON
-  legacy/medN4BiasCorrection                                             ON
-  legacy/medRegistrationWorkspace                                        ON
-  legacy/medRemeshing                                                    ON
+  legacy/itkDataSHImage                                                  OFF
+  legacy/itkDataTensorImage                                              OFF
+  legacy/itkFilters                                                      OFF
+  legacy/itkINRDataImageReader                                           OFF
+  legacy/itkINRDataImageWriter                                           OFF
+  legacy/itkProcessRegistrationOptimus                                   OFF
+  legacy/LCCLogDemons                                                    OFF  
+  legacy/manualRegistration                                              OFF
+  legacy/medAlgorithmPaint                                               OFF
+  legacy/medBinaryOperation                                              OFF
+  legacy/medCreateMeshFromMask                                           OFF
+  legacy/medFilteringWorkspaceL                                          OFF
+  legacy/medMaskApplication                                              OFF
+  legacy/medMeshingWorkspace                                             OFF
+  legacy/medN4BiasCorrection                                             OFF
+  legacy/medRegistrationWorkspace                                        OFF
+  legacy/medRemeshing                                                    OFF
   legacy/medSegmentation                                                 ON
   legacy/medSegmentationWorkspace                                        ON
-  legacy/medVtkFibersData                                                ON
+  legacy/medVtkFibersData                                                OFF
   legacy/medVtkView                                                      ON
-  legacy/meshManipulation                                                ON
-  legacy/meshMapping                                                     ON
+  legacy/meshManipulation                                                OFF
+  legacy/meshMapping                                                     OFF
   legacy/polygonRoi                                                      ON
-  legacy/qtdcmDataSource                                                 ON
-  legacy/reformat                                                        ON
-  legacy/undoRedoRegistration                                            ON
-  legacy/variationalSegmentation                                         ON
-  legacy/voiCutter                                                       ON
-  legacy/vtkDataMesh                                                     ON
-  legacy/medExportVideo                                                  ON
-  process/arithmetic_operation                                           ON
-  process/bias_correction                                                ON
-  process/dwi_basic_thresholding                                         ON
-  process/itkDWIBrainMaskCalculatorProcess                               ON
-  process/ttkTensorEstimationProcess                                     ON
-  process/ttkTensorScalarMapsProcess                                     ON
-  process/ttkTensorTractographyProcess                                   ON
-  process/mask_image                                                     ON
-  process/morphomath_operation                                           ON
-  process/single_filter                                                  ON
+  legacy/qtdcmDataSource                                                 OFF
+  legacy/reformat                                                        OFF
+  legacy/undoRedoRegistration                                            OFF
+  legacy/variationalSegmentation                                         OFF
+  legacy/voiCutter                                                       OFF
+  legacy/vtkDataMesh                                                     OFF
+  legacy/medExportVideo                                                  OFF
+  process/arithmetic_operation                                           OFF
+  process/bias_correction                                                OFF
+  process/dwi_basic_thresholding                                         OFF
+  process/itkDWIBrainMaskCalculatorProcess                               OFF
+  process/ttkTensorEstimationProcess                                     OFF
+  process/ttkTensorScalarMapsProcess                                     OFF
+  process/ttkTensorTractographyProcess                                   OFF
+  process/mask_image                                                     OFF
+  process/morphomath_operation                                           OFF
+  process/single_filter                                                  OFF
   )
 
   if(USE_DTKIMAGING)
