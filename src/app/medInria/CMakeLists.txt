@@ -49,6 +49,8 @@ list_source_files(${TARGET_NAME}
   areas/workspaces/registration
   areas/workspaces/segmentation
   areas/workspaces/visualization
+  FirstStart
+  ${SETTINGS_QRC_DIRECTORY_RELATIVE}
   )
 
 ##  see cmake/module/list_header_directories_to_include.cmake

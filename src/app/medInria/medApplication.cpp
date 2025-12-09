@@ -241,6 +241,26 @@ QScreen* medApplication::getPreviousScreen()
  */
 void medApplication::initializeSplashScreen()
 {
+    // Themes
+    QVariant themeChosen = medSettingsManager::instance()->value("startup","theme");
+    int themeIndex = themeChosen.toInt();
+    QPixmap splashLogo;
+    switch (themeIndex)
+    {
+        case 0:
+        default:
+        {
+            splashLogo.load(TOSTRING(LARGE_LOGO_DARK_THEME));
+            break;
+        }
+        case 1:
+        case 2:
+        {
+            splashLogo.load(TOSTRING(LARGE_LOGO_LIGHT_THEME));
+            break;
+        }
+    }
+
     d->splashScreen = new QSplashScreen(getPreviousScreen(), QPixmap(":/pixmaps/medInria-splash.png"),
         Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
     d->splashScreen->setAttribute(Qt::WA_DeleteOnClose, true);

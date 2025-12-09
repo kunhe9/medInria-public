@@ -42,6 +42,9 @@
 # define CONTROL_KEY "Ctrl"
 #endif
 
+#define VAL(str) #str
+#define TOSTRING(str) VAL(str)
+
 //--------------------------------------------------------------------------
 // medMainWindow
 
@@ -437,9 +440,316 @@ void medMainWindow::open_waitForImportedSignal(medDataIndex index, QUuid uuid)
 
 void medMainWindow::resizeEvent ( QResizeEvent* event )
 {
-    QWidget::resizeEvent ( event );
-    d->quickAccessWidget->move(QPoint (0, this->height() - d->quickAccessWidget->height() - 30 ));
-    this->hideQuickAccess();
+    //  get last directory opened in settings.
+    QString path;
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.restoreState(medSettingsManager::instance()->value("state", "openFromSystem").toByteArray());
+    dialog.restoreGeometry(medSettingsManager::instance()->value("geometry", "openFromSystem").toByteArray());
+    if (dialog.exec())
+        path = dialog.selectedFiles().first();
+
+    medSettingsManager::instance()->setValue("state", "openFromSystem", dialog.saveState());
+    medSettingsManager::instance()->setValue("geometry", "openFromSystem", dialog.saveGeometry());
+
+    if (!path.isEmpty())
+    {
+        open(path);
+    }
+}
+
+void medMainWindow::openDicomFromSystem()
+{
+    //  get last directory opened in settings.
+    QString path;
+    QFileDialog dialog(this);
+
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setViewMode(QFileDialog::Detail);
+    dialog.restoreState(medSettingsManager::instance()->value("state", "openFromSystem").toByteArray());
+    dialog.restoreGeometry(medSettingsManager::instance()->value("geometry", "openFromSystem").toByteArray());
+    if (dialog.exec())
+        path = dialog.selectedFiles().first();
+
+    medSettingsManager::instance()->setValue("state", "openFromSystem", dialog.saveState());
+    medSettingsManager::instance()->setValue("geometry", "openFromSystem", dialog.saveGeometry());
+
+    if (!path.isEmpty())
+    {
+        open(path);
+    }
+}
+
+void medMainWindow::setSourceVisibility(bool checked)
+{
+    QAction* currentAction = qobject_cast<QAction*>(sender());
+    QString sourceInstanceId = currentAction->data().toString();
+ 
+    emit medDataHub::instance()->sourceVisibled(sourceInstanceId, checked);
+}
+
+void medMainWindow::onShowBrowser()
+{
+    switchToBrowserArea();
+}
+
+void medMainWindow::onShowDataSources()
+{
+    QDialog *dialog = new QDialog(this);
+    medSourcesLoaderPresenter presenter(medSourcesLoader::instance());
+    auto wgt = presenter.buildWidget();
+    auto layout = new QVBoxLayout();
+    layout->addWidget(wgt);
+    dialog->setLayout(layout);
+    dialog->exec();
+}
+
+void medMainWindow::onShowAbout()
+{
+    QFile file(TOSTRING(ABOUT_FILE));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText(text);
+    msgBox.exec();
+}
+
+/**
+ * @brief Search the "Show Details..." button and click it to expand the text
+ * 
+ * @param msgBox 
+ */
+void medMainWindow::expandDetailedText(QMessageBox *msgBox)
+{
+    foreach (auto *button, msgBox->buttons())
+    {
+        if (msgBox->buttonRole(button) == QMessageBox::ActionRole)
+        {
+            button->click();
+            break;
+        }
+    }
+}
+
+/**
+ * @brief Display the application authors list in a widget.
+ * 
+ */
+void medMainWindow::onShowAuthors()
+{
+    QFile file(":authors.txt");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    std::string str = TOSTRING(ADDITIONAL_AUTHORS_LIST);
+    str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+    QString additionalAuthors = QString::fromStdString(str);
+    if (!additionalAuthors.isEmpty())
+    {   
+        additionalAuthors.replace(QString(","), QString("\n"));
+        text += "\n *** " + QString(TOSTRING(APPLICATION_NAME)) + " ***\n";
+        text += additionalAuthors;
+    }
+
+    QMessageBox msgBox;
+    msgBox.setText("List of the application authors:            ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+/**
+ * @brief Display the current release notes of the application in a widget.
+ * 
+ */
+void medMainWindow::onShowReleaseNotes()
+{
+    QFile file(TOSTRING(RELEASE_NOTES));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText("Here is the release notes with the history of the application:            ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+/**
+ * @brief Display the current license of the application in a widget.
+ * 
+ */
+void medMainWindow::onShowLicense()
+{
+    QFile file(TOSTRING(LICENSE_FILE));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString text = file.readAll();
+
+    QMessageBox msgBox;
+    msgBox.setText("Here is the application license:                           ");
+    msgBox.setDetailedText(text);
+    expandDetailedText(&msgBox);
+    msgBox.exec();
+}
+
+// void medMainWindow::onShowExtLicenses()
+// {
+//     QFile file(TOSTRING(LICENSE_EXTERNAL_FILE));
+//     file.open(QIODevice::ReadOnly | QIODevice::Text);
+//     QString text = file.readAll();
+
+//     QMessageBox msgBox;
+//     msgBox.setText("Here are the external library licenses:                           ");
+//     msgBox.setDetailedText(text);
+//     expandDetailedText(&msgBox);
+//     msgBox.exec();
+// }
+
+void medMainWindow::onShowAreaSettings()
+{
+    medStartupSettingsWidget dialog(this);
+    dialog.exec();
+}
+
+void medMainWindow::onShowWorkspace(QString workspace)
+{
+    emit showWorkspace(workspace);
+}
+
+void medMainWindow::onSwitchToWorkspace()
+{
+    QAction* currentAction = qobject_cast<QAction*>(sender());
+    onShowWorkspace(currentAction->data().toString());
+}
+
+void medMainWindow::onSwitchToProcess()
+{
+    qDebug()<<"onSwithToProcess";
+    QAction* currentAction = qobject_cast<QAction*>(sender());
+    QStringList data = currentAction->data().toStringList();
+    QString workspaceName = data[0];
+    QString processIdentifier = data[1];
+    QString processName = data[2];
+
+    switchToWorkspaceArea();
+    medWorkspaceFactory::Details* details = medWorkspaceFactory::instance()->workspaceDetailsFromId(workspaceName);
+
+    if (details)
+    {
+        d->shortcutAccessWidget->updateSelected(workspaceName);
+
+        if (!d->workspaceArea->setCurrentWorkspace(workspaceName))
+        {
+            QString message = QString("Cannot open workspace ") + details->name;
+            medMessageController::instance()->showError(message, 3000);
+            switchToHomepageArea();
+        }
+        else
+        {
+            auto * workspace = dynamic_cast<medSelectorWorkspace *>(d->workspaceArea->currentWorkspace());
+            medSelectorToolBox * selectorTb = workspace->selectorToolBox();
+            medComboBox *comboBox = selectorTb->comboBox();
+            comboBox->setCurrentIndex(selectorTb->getIndexOfToolBox(processName));
+            selectorTb->changeCurrentToolBox(processIdentifier);
+        }
+        // The View menu is dedicated to "view workspaces"
+        enableMenuBarItem("View", true);
+
+        this->hideShortcutAccess();
+    }
+
+
+}
+
+void medMainWindow::openLogDirectory()
+{
+    QString path = QFileInfo(dtkLogPath(qApp)).path();
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+}
+
+void medMainWindow::onShowPluginLogs()
+{
+    medPluginWidget dialog(this);
+    dialog.exec();
+}
+
+void medMainWindow::onShowHelp()
+{
+    // DOCUMENTATION_URL needs to be passed as a string in medInria.cmake 
+    //to avoid losing path after '/'
+    std::string str = TOSTRING(DOCUMENTATION_URL);
+    str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+    QDesktopServices::openUrl(QUrl(QString::fromStdString(str)));
+}
+
+void medMainWindow::filterWSMenu(QString text)
+{
+    if (text.isEmpty())
+    {
+        for (auto action : d->wsActions)
+        {
+            action->setEnabled(true);
+        }
+        for (auto menu : d->wsMenuActionsMap.keys())
+        {
+            menu->setEnabled(true);
+            for (auto action : d->wsMenuActionsMap[menu])
+            {
+                action->setEnabled(true);
+            }
+        }
+    }
+    else
+    {
+        auto textSplited = text.toLower().split(" ", QString::SkipEmptyParts);
+        for (auto action : d->wsActions)
+        {
+            bool bActionVisible = false;
+
+            QString id = action->data().toString().toLower();
+            QString name = action->text().toLower();
+
+            for (QString & keyword : textSplited)
+            {
+                bActionVisible = bActionVisible || id.contains(keyword) || name.contains(keyword);
+            }
+
+            action->setEnabled(bActionVisible);
+        }
+
+        for (auto menu : d->wsMenuActionsMap.keys())
+        {
+            bool bMenuVisible = false;
+            QString menuName = menu->title().toLower();
+            
+            for (QString & keyword : textSplited)
+            {
+                bMenuVisible = bMenuVisible || menuName.contains(keyword);
+            }
+
+            for (auto action : d->wsMenuActionsMap[menu])
+            {
+                bool bActionVisible = false;
+
+                QString id = action->data().toString().toLower();
+                QString name = action->text().toLower();
+
+                for (QString & keyword : textSplited)
+                {
+                    bActionVisible = bActionVisible || id.contains(keyword) || name.contains(keyword);
+                }
+
+                action->setEnabled(bActionVisible);
+
+                bMenuVisible = bMenuVisible || bActionVisible;
+            }
+
+            menu->setEnabled(bMenuVisible);
+        }
+    }
 }
 
 //TODO hide it, it is only usefull for immersive romm - RDE
