@@ -3,8 +3,8 @@
         <file>../../../../LICENSE.txt</file>
         <file>../../../../RELEASE_NOTES.txt</file>
 
-        <file>../../../../DESCRIPTION.txt</file>
-        <file>../../../../ABOUT.txt</file>
+        <!-- <file>../../../../DESCRIPTION.txt</file> -->
+        <!-- <file>../../../../ABOUT.txt</file> -->
         <file>authors.txt</file>
 
         <file>medInria-src/medInria.ico</file>
@@ -12,8 +12,8 @@
         <file>medInria-src/medInria-logo-dark.png</file>
         <file>medInria-src/medInria-logo-light.png</file>
 
-        <file>dark.qss</file>
-        <file>icons/dark/index.theme</file>
+        <!-- <file>dark.qss</file> -->
+        <!-- <file>icons/dark/index.theme</file>
         <file>icons/dark/png/checkbox.png</file>
         <file>icons/dark/png/checkbox-checked.png</file>
         <file>icons/dark/png/default_thumbnail.png</file>
@@ -71,17 +71,17 @@
         <file>icons/dark/svg/time_play.svg</file>
         <file>icons/dark/svg/upload.svg</file>
         <file>icons/dark/svg/upload_fail.svg</file>
-        <file>icons/dark/svg/user_add.svg</file>
-        <file>grey.qss</file>
-        <file>light.qss</file>
-        <file>icons/light/index.theme</file>
-        <file>icons/light/png/checkbox.png</file>
+        <file>icons/dark/svg/user_add.svg</file> -->
+        <!-- <file>grey.qss</file> -->
+        <!-- <file>light.qss</file> -->
+        <!-- <file>icons/light/index.theme</file> -->
+        <!-- <file>icons/light/png/checkbox.png</file>
         <file>icons/light/png/checkbox-checked.png</file>
         <file>icons/light/png/default_thumbnail.png</file>
         <file>icons/light/png/fourViews.png</file>
         <file>icons/light/png/gaussian_filter.png</file>
         <file>icons/light/png/minus.png</file>
-        <file>icons/light/png/notifications.png</file>
+        <file>icons/light/png/notifications.png</file> 
         <file>icons/light/png/plus.png</file>
         <file>icons/light/png/radio.png</file>
         <file>icons/light/png/radio-checked.png</file>
@@ -132,19 +132,19 @@
         <file>icons/light/svg/time_play.svg</file>
         <file>icons/light/svg/upload.svg</file>
         <file>icons/light/svg/upload_fail.svg</file>
-        <file>icons/light/svg/user_add.svg</file>
-        <file>icons/arrow-bot-disabled.svg</file>
-        <file>icons/arrow-left-disabled.svg</file>
+        <file>icons/light/svg/user_add.svg</file>  -->
+        <!-- <file>icons/arrow-bot-disabled.svg</file> -->
+        <!-- <file>icons/arrow-left-disabled.svg</file> -->
 
-        <file>icons/arrow-right-disabled.svg</file>
-        <file>icons/arrow-top-disabled.svg</file>
-        <file>icons/checkbox-partial.png</file>
-        <file>icons/chevron_down_disabled.svg</file>
-        <file>icons/chevron_up_disabled.svg</file>
-        <file>icons/connect_on.svg</file>
-        <file>icons/connect_off.svg</file>
-        <file>icons/cross_disabled.svg</file>
-        <file>icons/cross_red.svg</file>
+        <!-- <file>icons/arrow-right-disabled.svg</file> -->
+        <!-- <file>icons/arrow-top-disabled.svg</file> -->
+        <!-- <file>icons/checkbox-partial.png</file> -->
+        <!-- <file>icons/chevron_down_disabled.svg</file> -->
+        <!-- <file>icons/chevron_up_disabled.svg</file> -->
+        <!-- <file>icons/connect_on.svg</file> -->
+        <!-- <file>icons/connect_off.svg</file> -->
+        <!-- <file>icons/cross_disabled.svg</file> -->
+        <!-- <file>icons/cross_red.svg</file> -->
 
         <file>icons/error.png</file>
         <file>icons/error_add.png</file>

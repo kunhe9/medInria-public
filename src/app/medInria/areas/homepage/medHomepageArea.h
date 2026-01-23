@@ -36,28 +36,22 @@ public slots:
     void onShowAbout();
     void onShowPlugin();
     void onShowHelp();
-    void onShowInfo();
+    // void onShowAuthors();
     void onShowComposer();
     void openLogDirectory();
+    // void onShowReleaseNotes();
+    // void onShowLicense();
+    void onShowInfo();
+    // void onShowExtLicenses();
 
 signals:
-    /**
-     * @deprecated Doesn't use the medMainWindow's slots anymore.
-     */
-    void showSettings();
-    /**
-     * @deprecated Doesn't use the medMainWindow's slots anymore.
-     */
-    void showAbout();
-    /**
-     * @deprecated Doesn't use the medMainWindow's slots anymore.
-     */
-    void showHelp();
-
     void showBrowser();
     void showViewer();
     void showWorkspace(QString workspace);
     void showComposer();
+
+// protected:
+//     void expandDetailedText(QMessageBox*);
 
 private:
     medHomepageAreaPrivate * d;

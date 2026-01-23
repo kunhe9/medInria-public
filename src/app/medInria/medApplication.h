@@ -28,9 +28,14 @@ public:
 
     bool event(QEvent *event);
     void setMainWindow(medMainWindow *mw);
+    void initializeSplashScreen();
+    void initializeThemes();
+    QScreen* getPreviousScreen();
 
 signals:
     void showMessage(const QString& message);
+    void messageReceived(const QString &message);
+
 
 public slots:
     void redirectMessageToSplash(const QString& message);
