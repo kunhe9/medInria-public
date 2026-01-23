@@ -40,6 +40,19 @@ public:
 
     void setStartup(const AreaType areaIndex,const QStringList& filenames);
     void resizeEvent( QResizeEvent * event );
+    // void openDicomFromSystem();
+    // //void setSourceVisibility(bool checked);
+    // void onShowBrowser();
+    // //void onShowDataSources();
+    // void onShowAuthors();
+    // void onShowReleaseNotes();
+    // void onShowLicense();
+    // //void onShowAreaSettings();
+    // void onShowWorkspace(QString workspace);
+    // void onSwitchToWorkspace();
+    // void onSwitchToProcess();
+    // //void onShowPluginLogs();
+    // void filterWSMenu(QString text);
 
 signals:
     void sliceSelected(int slice);

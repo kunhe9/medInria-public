@@ -43,47 +43,40 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     //Setup navigation widget (with buttons for accessing available workspaces)
     d->navigationWidget = new QWidget ( this );
 
-    QHBoxLayout *descriptionLayout = new QHBoxLayout(d->descriptionWidget);
-    descriptionLayout->setContentsMargins(0, 0, 0, 0);
+    d->infoWidget = new QWidget ( this );
+    d->infoWidget->setMinimumSize(400, 400);
+
+    //Setup the widget with about, settings, plugins and documentation buttons
+    d->userWidget = new QWidget ( this );
+
+    //Setup the about container widget (with a QTabWidget inside)
+    d->aboutWidget = new QWidget ( this );
+    d->aboutWidget->setMinimumSize(400, 400);
+
+    // QVBoxLayout *descriptionLayout = new QVBoxLayout(d->descriptionWidget);
 
     // Themes
-    QVariant themeChosen = medSettingsManager::instance()->value("startup","theme");
+    QVariant themeChosen = medSettingsManager::instance().value("startup","theme");
     int themeIndex = themeChosen.toInt();
     QString qssLogoName;
+    QString qssWarningColor;
     switch (themeIndex)
     {
         case 0:
         default:
         {
             qssLogoName = TOSTRING(LARGE_LOGO_DARK_THEME);
+            qssWarningColor = "#FC875F";
             break;
         }
         case 1:
         case 2:
         {
             qssLogoName = TOSTRING(LARGE_LOGO_LIGHT_THEME);
+            qssWarningColor = "#0010A8";
             break;
         }
     }
-    QPixmap medLogo(qssLogoName);
-    medLogo = medLogo.scaled(356, 102, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    d->applicationLabel = new QLabel(this);
-    QPixmap applicationLogo = getApplicationLogoPixmap();
-    d->applicationLabel->setPixmap(applicationLogo);
-    descriptionLayout->addWidget(d->applicationLabel);
-    descriptionLayout->setSpacing(13);
-
-    d->textEdit = new QTextEdit(this);
-    QFile descriptionFile(QString(TOSTRING(DESCRIPTION_HOMEPAGE)));
-    descriptionFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QTextStream descriptionStream(&descriptionFile);
-    descriptionStream.setCodec("UTF-8");
-    d->textEdit->setHtml(descriptionStream.readAll());
-    d->textEdit->setReadOnly(true);
-    d->textEdit->setFocusPolicy(Qt::NoFocus);
-    d->textEdit->setMaximumHeight(70);
-    d->textEdit->setStyleSheet("background : transparent;");
-    descriptionLayout->addWidget(d->textEdit);
 
     //User widget content with settings, about and help buttons
     QHBoxLayout * userButtonsLayout = new QHBoxLayout(d->userWidget);
@@ -157,38 +150,13 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     // Info widget: application logo, description, etc
     QVBoxLayout * infoLayout = new QVBoxLayout(d->infoWidget);
     QLabel * medInriaLabel = new QLabel ( this );   
-    
-    // Themes
-    QVariant themeChosen = medSettingsManager::instance().value("startup","theme");
-    int themeIndex = themeChosen.toInt();
-    QString qssLogoName;
-    QString qssWarningColor;
-    switch (themeIndex)
-    {
-        case 0:
-        case 1:
-        case 2:
-        default:
-        {
-            qssLogoName = ":MUSICardio_logo_dark.png";
-            qssWarningColor = "#FC875F";
-            break;
-        }
-        case 3:
-        case 4:
-        {
-            qssLogoName = ":MUSICardio_logo_light.png";
-            qssWarningColor = "#0010A8";
-            break;
-        }
-    }
 
     QPixmap medLogo(qssLogoName);
     medLogo = medLogo.scaled(527, 110, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     medInriaLabel->setPixmap(medLogo);
 
     QDate expiryDate = QDate::fromString(QString(MEDINRIA_BUILD_DATE), "dd_MM_yyyy")
-                                        .addMonths(EXPIRATION_TIME);
+                                        .addMonths(QString(TOSTRING(EXPIRATION_TIME)).toInt());
     QTextEdit * textEdit = new QTextEdit(this);
     textEdit->setHtml ( QString::fromUtf8("<br/><br/><b>%1</b> (%2) is a software developed in collaboration with "
                                           "the IHU LIRYC in order to propose functionalities "
@@ -238,7 +206,7 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     aboutAuthorTextBrowser->setFocusPolicy ( Qt::NoFocus );
 
     QTextEdit * aboutLicenseTextEdit = new QTextEdit(this);
-    QFile license ( ":LICENSE_MUSICardio.txt" );
+    QFile license (TOSTRING(LICENSE_FILE));
     license.open ( QIODevice::ReadOnly | QIODevice::Text );
     QTextStream licenseContent(&license);
     licenseContent.setCodec("UTF-8");
@@ -247,7 +215,7 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     license.close();
 
     QTextEdit * aboutLicensesExtTextEdit = new QTextEdit(this);
-    QFile licensesExt ( ":LICENSES_EXT.txt" );
+    QFile licensesExt (TOSTRING(LICENSE_EXTERNAL_FILE));
     licensesExt.open ( QIODevice::ReadOnly | QIODevice::Text );
     QTextStream licensesExtContent(&licensesExt);
     licensesExtContent.setCodec("UTF-8");
@@ -256,7 +224,7 @@ medHomepageArea::medHomepageArea ( QWidget * parent ) : QWidget ( parent ), d ( 
     licensesExt.close();
 
     QTextEdit * releaseNotesTextEdit = new QTextEdit(this);
-    QFile releaseNotes ( ":RELEASE_NOTES.txt" );
+    QFile releaseNotes (TOSTRING(RELEASE_NOTES));
     releaseNotes.open ( QIODevice::ReadOnly | QIODevice::Text );
     QString releaseNotesContent = releaseNotes.readAll();
     releaseNotes.close();
@@ -531,13 +499,15 @@ void medHomepageArea::onShowBrowser()
     emit showBrowser();
 }
 
-void medHomepageArea::onShowWorkspace(QString workspace)
-{
-    emit showWorkspace ( workspace );
-}
-
 void medHomepageArea::onShowAbout()
 {
+    // QFile file(TOSTRING(ABOUT_FILE));
+    // file.open(QIODevice::ReadOnly | QIODevice::Text);
+    // QString text = file.readAll();
+
+    // QMessageBox msgBox;
+    // msgBox.setText(text);
+    // msgBox.exec();
     d->stackedWidget->setCurrentWidget(d->aboutWidget);
     d->aboutWidget->setFocus();
 }
@@ -555,11 +525,6 @@ void medHomepageArea::onShowInfo()
     d->infoWidget->setFocus();
 }
 
-void medHomepageArea::onShowHelp()
-{
-    QDesktopServices::openUrl(QUrl("https://music-test.inria.fr/musicardio/"));
-}
-
 void medHomepageArea::onShowSettings()
 {
     d->settingsEditor->setTabPosition(QTabWidget::North);
@@ -568,25 +533,110 @@ void medHomepageArea::onShowSettings()
     d->stackedWidget->setCurrentWidget(d->settingsWidget);
 
     d->settingsWidget->setFocus();
-    QPixmap applicationLogo;
-    int themeIndex = medSettingsManager::instance()->value("startup","theme").toInt();
-
-    switch (themeIndex)
-    {
-    case 0:
-    default:
-        applicationLogo = QPixmap(":pixmaps/medInria-logo-theme-dark.png");
-        break;
-    case 1:
-    case 2:
-        applicationLogo = QPixmap(":pixmaps/medInria-logo-theme-light.png");
-        break;
-    }
-    return applicationLogo;
 }
+
+// /**
+//  * @brief Search the "Show Details..." button and click it to expand the text
+//  * 
+//  * @param msgBox 
+//  */
+// void medHomepageArea::expandDetailedText(QMessageBox *msgBox)
+// {
+//     foreach (auto *button, msgBox->buttons())
+//     {
+//         if (msgBox->buttonRole(button) == QMessageBox::ActionRole)
+//         {
+//             button->click();
+//             break;
+//         }
+//     }
+// }
+
+// void medHomepageArea::onShowAuthors()
+// {
+//     QFile file(":authors.txt");
+//     file.open(QIODevice::ReadOnly | QIODevice::Text);
+//     QString text = file.readAll();
+
+//     std::string str = TOSTRING(ADDITIONAL_AUTHORS_LIST);
+//     str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+//     QString additionalAuthors = QString::fromStdString(str);
+//     if (!additionalAuthors.isEmpty())
+//     {   
+//         additionalAuthors.replace(QString(","), QString("\n"));
+//         text += "\n *** " + QString(TOSTRING(APPLICATION_NAME)) + " ***\n";
+//         text += additionalAuthors;
+//     }
+
+//     QMessageBox msgBox;
+//     msgBox.setText("List of the application authors:            ");
+//     msgBox.setDetailedText(text);
+//     expandDetailedText(&msgBox);
+//     msgBox.exec();
+// }
+
+// void medHomepageArea::onShowReleaseNotes()
+// {
+//     QFile file(TOSTRING(RELEASE_NOTES));
+//     file.open(QIODevice::ReadOnly | QIODevice::Text);
+//     QString text = file.readAll();
+
+//     QMessageBox msgBox;
+//     msgBox.setText("Here is the release notes with the history of the application:            ");
+//     msgBox.setDetailedText(text);
+//     expandDetailedText(&msgBox);
+//     msgBox.exec();
+// }
+
+// void medHomepageArea::onShowLicense()
+// {
+//     QFile file(TOSTRING(LICENSE_FILE));
+//     file.open(QIODevice::ReadOnly | QIODevice::Text);
+//     QString text = file.readAll();
+
+//     QMessageBox msgBox;
+//     msgBox.setText("Here is the application license:                           ");
+//     msgBox.setDetailedText(text);
+//     expandDetailedText(&msgBox);
+//     msgBox.exec();
+// }
+
+// void medHomepageArea::onShowExtLicenses()
+// {
+//     QFile file(TOSTRING(LICENSE_EXTERNAL_FILE));
+//     file.open(QIODevice::ReadOnly | QIODevice::Text);
+//     QString text = file.readAll();
+
+//     QMessageBox msgBox;
+//     msgBox.setText("Here are the external library licenses:                           ");
+//     msgBox.setDetailedText(text);
+//     expandDetailedText(&msgBox);
+//     msgBox.exec();
+// }
+
+void medHomepageArea::onShowWorkspace(QString workspace)
+{
+    emit showWorkspace ( workspace );
+}
+
 
 void medHomepageArea::openLogDirectory()
 {
     QString path = QFileInfo(dtkLogPath(qApp)).path();
     QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+}
+
+
+void medHomepageArea::onShowHelp()
+{   
+    // DOCUMENTATION_URL needs to be passed as a string in medInria.cmake 
+    //to avoid losing path after '/'
+    std::string str = TOSTRING(DOCUMENTATION_URL);
+    str.erase(std::remove(str.begin(),str.end(),'\"'),str.end());
+    QDesktopServices::openUrl(QUrl(QString::fromStdString(str)));
+}
+
+void medHomepageArea::onShowComposer()
+{
+    emit showComposer();
 }

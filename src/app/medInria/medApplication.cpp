@@ -55,15 +55,10 @@ medApplication::medApplication(int & argc, char**argv) :
     d->mainWindow = nullptr;
 
     this->setApplicationName(TOSTRING(APPLICATION_NAME));
-    this->setApplicationVersion(MEDINRIA_VERSION);
     this->setOrganizationName(TOSTRING(ORGANIZATION_NAME));
     this->setOrganizationDomain(TOSTRING(ORGANIZATION_DOMAIN));
     this->setWindowIcon(QIcon(TOSTRING(WINDOW_ICON)));
-
-    this->setApplicationName(PROJECT_NAME); /*Beware, change database path*/
     this->setApplicationVersion(MEDINRIA_VERSION);
-    this->setOrganizationName("INRIA_IHU-LIRYC"); /*Beware, change database path*/
-    this->setOrganizationDomain("fr");
 
     medLogger::initialize();
 
@@ -71,54 +66,28 @@ medApplication::medApplication(int & argc, char**argv) :
     qInfo() << "Version: "    << MEDINRIA_VERSION;
     qInfo() << "Build Date: " << MEDINRIA_BUILD_DATE;
 
+    initializeSplashScreen();
+    initializeThemes();
+
     QApplication::setStyle(QStyleFactory::create("fusion"));
 
     // Expiration Date
     QDate expiryDate = QDate::fromString(QString(MEDINRIA_BUILD_DATE), "dd_MM_yyyy")
-                                        .addMonths(EXPIRATION_TIME);
+                                        .addMonths(QString(TOSTRING(EXPIRATION_TIME)).toInt());
     qInfo() << "Expiration Date: " << qPrintable(expiryDate.toString());
 
     if ( ! expiryDate.isValid() || QDate::currentDate() > expiryDate)
     {
         QString expiredInfo = "This copy of ";
-        expiredInfo += (char*)(PROJECT_NAME);
+        expiredInfo += TOSTRING(PROJECT_NAME);
         expiredInfo += " has expired, please contact ";
-        expiredInfo += (char*)(PROJECT_CONTACT);
+        expiredInfo += TOSTRING(PROJECT_CONTACT);
         expiredInfo += " for more information.";
         QMessageBox msg;
         msg.setText(expiredInfo);
         msg.exec();
         ::exit(1);
     }
-
-    QString qssFile;
-    switch (themeIndex)
-    {
-    case 0:
-    default:
-        // Dark Grey
-        qssFile = ":/music_darkGrey.qss";
-        break;
-    case 1:
-        // Dark Blue
-        qssFile = ":/music_dark.qss";
-        break;
-    case 2:
-        // medInria
-        qssFile = ":/medInria.qss";
-        break;
-    case 3:
-        // Light Grey
-        qssFile = ":/music_lightGrey.qss";
-        break;
-    case 4:
-        // Light
-        qssFile = ":/music_light.qss";
-        break;
-    }
-    this->setWindowIcon(QIcon(":MUSICardio_logo_small_light.png"));
-    medStyleSheetParser parser(dtkReadFile(qssFile));
-    this->setStyleSheet(parser.result());
 
     this->initialize();
 }
@@ -202,7 +171,7 @@ void medApplication::initialize()
 #elif defined(Q_OS_WIN)
     plugins_dir = qApp->applicationDirPath() + "/plugins";
 #else
-    plugins_dir = qApp->applicationDirPath() + "/plugins";
+    plugins_dir.setPath(qApp->applicationDirPath() + "/plugins");
 #endif
     defaultPath = plugins_dir.absolutePath();
 
@@ -219,9 +188,9 @@ void medApplication::initialize()
  */
 QScreen* medApplication::getPreviousScreen()
 {
-    medSettingsManager *manager = medSettingsManager::instance();
+    medSettingsManager &manager = medSettingsManager::instance();
     int currentScreen = 0;
-    QVariant currentScreenQV = manager->value("medMainWindow", "currentScreen");
+    QVariant currentScreenQV = manager.value("medMainWindow", "currentScreen");
     if (!currentScreenQV.isNull())
     {
         currentScreen = currentScreenQV.toInt();
@@ -241,25 +210,25 @@ QScreen* medApplication::getPreviousScreen()
  */
 void medApplication::initializeSplashScreen()
 {
-    // Themes
-    QVariant themeChosen = medSettingsManager::instance()->value("startup","theme");
-    int themeIndex = themeChosen.toInt();
-    QPixmap splashLogo;
-    switch (themeIndex)
-    {
-        case 0:
-        default:
-        {
-            splashLogo.load(TOSTRING(LARGE_LOGO_DARK_THEME));
-            break;
-        }
-        case 1:
-        case 2:
-        {
-            splashLogo.load(TOSTRING(LARGE_LOGO_LIGHT_THEME));
-            break;
-        }
-    }
+    // // Themes
+    // QVariant themeChosen = medSettingsManager::instance().value("startup","theme");
+    // int themeIndex = themeChosen.toInt();
+    // QPixmap splashLogo;
+    // switch (themeIndex)
+    // {
+    //     case 0:
+    //     default:
+    //     {
+    //         splashLogo.load(TOSTRING(LARGE_LOGO_DARK_THEME));
+    //         break;
+    //     }
+    //     case 1:
+    //     case 2:
+    //     {
+    //         splashLogo.load(TOSTRING(LARGE_LOGO_LIGHT_THEME));
+    //         break;
+    //     }
+    // }
 
     d->splashScreen = new QSplashScreen(getPreviousScreen(), QPixmap(":/pixmaps/medInria-splash.png"),
         Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
@@ -276,22 +245,30 @@ void medApplication::initializeThemes()
 {
     QApplication::setStyle(QStyleFactory::create("fusion"));
 
-    int themeIndex = medSettingsManager::instance()->value("startup","theme").toInt();
+    int themeIndex = medSettingsManager::instance().value("startup","theme").toInt();
     QString qssFile;
     switch (themeIndex)
     {
     case 0:
     default:
-        qssFile = ":/dark.qss";
-        QIcon::setThemeName(QStringLiteral("dark"));
+        // Dark Grey
+        qssFile = ":/music_darkGrey.qss";
         break;
     case 1:
-        qssFile = ":/grey.qss";
-        QIcon::setThemeName(QStringLiteral("light"));
+        // Dark Blue
+        qssFile = ":/music_dark.qss";
         break;
     case 2:
-        qssFile = ":/light.qss";
-        QIcon::setThemeName(QStringLiteral("light"));
+        // medInria
+        qssFile = ":/medInria.qss";
+        break;
+    case 3:
+        // Light Grey
+        qssFile = ":/music_lightGrey.qss";
+        break;
+    case 4:
+        // Light
+        qssFile = ":/music_light.qss";
         break;
     }
     medStyleSheetParser parser(dtkReadFile(qssFile));
