@@ -5,7 +5,7 @@
 
         <!-- <file>../../../../DESCRIPTION.txt</file> -->
         <!-- <file>../../../../ABOUT.txt</file> -->
-        <file>authors.txt</file>
+        <!-- <file>authors.txt</file> -->
 
         <file>medInria-src/medInria.ico</file>
         <file>medInria-src/medInria.png</file>

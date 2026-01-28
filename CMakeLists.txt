@@ -67,6 +67,9 @@ foreach(IDX RANGE 0)
     string(JSON largeLogoLightTheme GET ${MY_JSON_STRING} ${IDX} largeLogoLightTheme)
     set(LARGE_LOGO_LIGHT_THEME ${largeLogoLightTheme} CACHE STRING "settings" FORCE)
 
+    string(JSON expirationTime GET ${MY_JSON_STRING} ${IDX} expirationTime)
+    set(EXPIRATION_TIME ${expirationTime} CACHE STRING "settings" FORCE)
+
     string(JSON windowIcon GET ${MY_JSON_STRING} ${IDX} windowIcon)
     set(WINDOW_ICON ${windowIcon} CACHE STRING "settings" FORCE)
 
