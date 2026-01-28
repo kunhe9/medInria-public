@@ -85,7 +85,7 @@ if (NOT WIN32)
   endif()
 endif()
 
-set(EXPIRATION_TIME "24" CACHE STRING "After X months the copy will expire")
+set(EXPIRATION_TIME ${EXPIRATION_TIME} CACHE STRING "After X months the copy will expire")
 
 if (USE_Python)
     list(APPEND external_projects

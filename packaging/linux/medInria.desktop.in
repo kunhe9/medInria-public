@@ -3,7 +3,7 @@ Type=Application
 
 Name=@APPLICATION_NAME@
 GenericName=Medical Imaging Platform
-Comment=Process and Visualize Medical Images
+Comment=Process and Visualize Cardiac Images
 Icon=@CPACK_PACKAGING_INSTALL_PREFIX@
 Exec=@APPLICATION_NAME@ %U
 Terminal=false
