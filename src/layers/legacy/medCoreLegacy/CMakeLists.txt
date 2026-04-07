@@ -66,6 +66,9 @@ target_include_directories(${TARGET_NAME}
   PUBLIC ${${TARGET_NAME}_INCLUDE_DIRS}
   )
 
+target_compile_definitions(medCoreLegacy
+    PRIVATE BUILD_APPLI="${BUILD_APPLI}"
+)
 ## #############################################################################
 ## Link
 ## #############################################################################

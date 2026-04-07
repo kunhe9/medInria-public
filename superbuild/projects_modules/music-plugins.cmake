@@ -40,9 +40,14 @@ function(music_plugins_project)
         )
 
     if (NOT USE_SYSTEM_${external_project})
-
-        set(git_url ${GITHUB_PREFIX}Inria-Asclepios/music.git)
-        set(git_tag 4.1)
+        if(BUILD_APPLI STREQUAL "MUSICardio")
+            set(git_url ${GITHUB_PREFIX}Inria-Asclepios/music.git)
+            set(git_tag 4.1)
+        elseif(BUILD_APPLI STREQUAL "SPOTCardio")
+            set(git_url ${GITHUB_PREFIX}kunhe9/music.git)
+            set(git_tag ubuntu24)
+        endif()
+        
 
 ## #############################################################################
 ## Add specific cmake arguments for configuration step of the project

@@ -4,16 +4,15 @@
 // 1° Update the parameters in this configuration file:
 [
     {
-        "applicationName":       "MUSICardio",      // beware, it changes the default database path
-        "organizationName":      "INRIA_IHU-LIRYC", // beware, it changes the default database path
+        "applicationName":       "SPOTCardio",      // beware, it changes the default database path
+        "organizationName":      "IHU-LIRYC", // beware, it changes the default database path
         "organizationDomain":    "fr",
-        "projectName":           "MUSICardio",
-        "projectContact":        "music-dev@inria.fr",
+        "projectContact":        "smheart@ihu-liryc.fr",
         "documentationURL":      "https://music-test.inria.fr/musicardio",
         "additionalAuthorsList": "", // additional names separated by ','
 
         // Set the directory including your qrc file and resources, added at medInria-public root
-        "settingsQrcDirectory": "msc_config", 
+        "settingsQrcDirectory": "spot_config", 
         
         // Add these resources to your qrc file also
         "largeLogoDarkTheme":  ":icons/MUSICardio_logo_dark.svg", // recommended size for logos: multiple of 706x245
@@ -28,12 +27,12 @@
         // Packaging
         "packageVendor":        "https://www.ihu-liryc.fr/music/",
         "projectDescription":   "MUSICardio is a cardiac image visualization and processing tool developed in collaboration between INRIA and the IHU LIRYC.",
-        "descriptionPackaging": "msc_config/msc-packaging-description.txt",
-        "readmeFile":           "msc_config/msc-packaging-readme.txt",
-        "welcomeFile":          "msc_config/msc-packaging-welcome.txt",
-        "licenceFilePath":      "msc_config/msc-license.txt",
-        "windowIconPath":       "msc_config/icons/MUSICardio_icon.ico",
-        "macOSIconPath":        "msc_config", // dmg content icon for this application needs to be called medInria.icns
+        "descriptionPackaging": "spot_config/msc-packaging-description.txt",
+        "readmeFile":           "spot_config/msc-packaging-readme.txt",
+        "welcomeFile":          "spot_config/msc-packaging-welcome.txt",
+        "licenceFilePath":      "spot_config/msc-license.txt",
+        "windowIconPath":       "spot_config/icons/MUSICardio_icon.ico",
+        "macOSIconPath":        "spot_config", // dmg content icon for this application needs to be called medInria.icns
         
         "expirationTime":       "12" // X months after the compilation this binary will expire. 0 = no expiration date"
     }

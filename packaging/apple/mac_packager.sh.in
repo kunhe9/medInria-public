@@ -15,7 +15,6 @@ if [[ -n "$dmgs_found" ]]; then
     find . -maxdepth 1 -type f -name "*.dmg" -exec rm -f {} +
 fi
 
-<<<<<<< HEAD
 # Preparation of the new bundle in TmpInstall
 echo "# Prepare the bundle"
 BUNDLE="MUSICardio"
@@ -23,20 +22,6 @@ APP_EXE="${BUNDLE}.app/Contents/MacOS/${BUNDLE}"
 PLUGIN_DIR="${BUNDLE}.app/Contents/PlugIns"
 FRAMEWORK_DIR="${BUNDLE}.app/Contents/Frameworks"
 CERT_NAME="MDS-certificate"
-=======
-# 1. build medInria
-# 2. build medInria-plugins as well as your desired own plugins
-# 3. chmod u+x mac_pacakger.sh
-# 4. run mac_pacakger.sh with each argument being a script to package your plugins, e.g. : ./mac_packager.sh ${Plugins_Build_Dir}/mac_visages_plugins_packager.sh
-
-# The bundle medInria.app will contain all plugins and will be standalone, packaged into MedINRIA.dmg in the install dir
-
-cd @medInria_BINARY_DIR@/bin
-
-\rm -fr TmpInstall
-mkdir TmpInstall
-cp -r @APPLICATION_NAME@.app TmpInstall
->>>>>>> 71e8c4356 ([Custom] configure setting file to customize medInria 4)
 
 cd @PROJECT_BINARY_DIR@
 rm -fr TmpInstall

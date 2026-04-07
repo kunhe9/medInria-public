@@ -140,7 +140,15 @@ bool medStartupSettingsWidget::write()
 {
     medSettingsManager &mnger = medSettingsManager::instance();
     mnger.setValue("startup", "fullscreen", d->startInFullScreen->isChecked());
-    mnger.setValue("startup", "default_starting_area", d->defaultStartingArea->currentText());
+
+    std::cout << "BUILD_APPLI = " << BUILD_APPLI << std::endl;
+    std::string buildAppli = BUILD_APPLI;
+
+    if (buildAppli == "MUSICardio")
+        mnger.setValue("startup", "default_starting_area", d->defaultStartingArea->currentText());
+    else if (buildAppli == "SPOTCardio")
+        mnger.setValue("startup", "default_starting_area", "SPOT");
+    
     mnger.setValue("startup", "theme", d->theme->currentIndex());
     mnger.setValue("startup", "default_segmentation_speciality", d->defaultSegmentationSpeciality->currentText());
     return true;

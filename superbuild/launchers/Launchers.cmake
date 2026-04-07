@@ -29,13 +29,19 @@ set(MEDINRIA_DIR ${medInria_ROOT})
 if (APPLE)
   set(MEDINRIA_BIN ${medInria_ROOT}/bin/MUSICardio.app/Contents/MacOS/MUSICardio)
 else()
-  set(MEDINRIA_BIN ${medInria_ROOT}/bin/MUSICardio)
+  set(MEDINRIA_BIN ${medInria_ROOT}/bin/SPOTCardio)
 endif()
 
 set(MEDINRIA_PLUGINS_DIRS "${medInria_ROOT}/bin/plugins:${DEV_PLUGINS_DIRS}")
 set(MEDINRIA_PLUGINS_LEGACY_DIRS "${medInria_ROOT}/bin/plugins_legacy:${DEV_PLUGINS_LEGACY_DIRS}")
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_BINARY_DIR}/MUSICardio.sh @ONLY)
+if(BUILD_APPLI STREQUAL "MUSICardio")
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_BINARY_DIR}/MUSICardio.sh @ONLY)
+elseif(BUILD_APPLI STREQUAL "SPOTCardio")
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_BINARY_DIR}/SPOTCardio.sh @ONLY)
+endif()
+
+#configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_BINARY_DIR}/SPOTCardio.sh @ONLY)
 
 #   For end users.
 
@@ -45,10 +51,16 @@ set(MEDINRIA_DIR "$(locate)")
 if (APPLE)
   set(MEDINRIA_BIN "\${MEDINRIA_DIR}/bin/MUSICardio.app/Contents/MacOS/MUSICardio")
 else()
-  set(MEDINRIA_BIN "\${MEDINRIA_DIR}/bin/MUSICardio")
+  set(MEDINRIA_BIN "\${MEDINRIA_DIR}/bin/SPOTCardio")
 endif()
 
 set(MEDINRIA_PLUGINS_DIRS "\${MEDINRIA_DIR}/plugins:\${MEDINRIA_DIR}/bin/plugins:\${MEDINRIA_USER_PLUGINS_DIRS}")
 set(MEDINRIA_PLUGINS_LEGACY_DIRS "\${MEDINRIA_DIR}/plugins_legacy:\${MEDINRIA_DIR}/bin/plugins_legacy:\${MEDINRIA_USER_PLUGINS_DIRS_LEGACY}")
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_CURRENT_BINARY_DIR}/MUSICardio.sh @ONLY)
+
+if(BUILD_APPLI STREQUAL "MUSICardio")
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_CURRENT_BINARY_DIR}/MUSICardio.sh @ONLY)
+elseif(BUILD_APPLI STREQUAL "SPOTCardio")
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_CURRENT_BINARY_DIR}/SPOTCardio.sh @ONLY)
+endif()
+#configure_file(${CMAKE_CURRENT_LIST_DIR}/MUSICardio.sh.in ${CMAKE_CURRENT_BINARY_DIR}/SPOTCardio.sh @ONLY)

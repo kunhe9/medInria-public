@@ -26,7 +26,28 @@ endif()
 
 SET(CMAKE_CXX_STANDARD 17)
 
+if(NOT DEFINED BUILD_APPLI)
+    set(BUILD_APPLI "MUSICardio" CACHE STRING "Choose application")
+endif()
+
+message(STATUS "BUILD_APPLI = '${BUILD_APPLI}'")
+
+set_property(CACHE BUILD_APPLI PROPERTY STRINGS MUSICardio SPOTCardio)
+
+add_definitions(-DBUILD_APPLI="${BUILD_APPLI}")
+
+if(NOT BUILD_APPLI STREQUAL "MUSICardio" AND
+   NOT BUILD_APPLI STREQUAL "SPOTCardio")
+    message(FATAL_ERROR "BUILD_APPLI must be MUSICardio or SPOTCardio")
+endif()
+
 project(MEDINRIA_SUPERBUILD VERSION ${MEDINRIA_SUPERBUILD_VERSION})
+
+if(BUILD_APPLI STREQUAL "MUSICardio")
+    message(STATUS "Build MUSICardio")
+elseif(BUILD_APPLI STREQUAL "SPOTCardio")
+    message(STATUS "Build SPOTCardio")
+endif()
 
 ## #############################################################################
 ## External settings
