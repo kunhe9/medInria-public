@@ -81,3 +81,6 @@ license: https://github.com/libarchive/libarchive/blob/master/COPYING
 * xz
 sources: https://github.com/tukaani-project/xz
 license: https://github.com/tukaani-project/xz/blob/master/COPYING
+* onnxruntime
+sources: https://github.com/microsoft/onnxruntime
+license: https://github.com/microsoft/onnxruntime/blob/main/LICENSE

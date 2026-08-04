@@ -15,6 +15,7 @@ function(music_plugins_project)
         ZLIB
         xz
         libarchive
+        onnxruntime
         )
 
     if (${USE_RealTimeWorkspace})
@@ -40,8 +41,11 @@ function(music_plugins_project)
 
     if (NOT USE_SYSTEM_${external_project})
 
-        set(git_url ${GITHUB_PREFIX}Inria-Asclepios/music.git)
-        set(git_tag dev)
+        #set(git_url ${GITHUB_PREFIX}Inria-Asclepios/music.git)
+        #set(git_tag dev)
+
+        set(git_url ${GITHUB_PREFIX}kunhe9/music.git)
+        set(git_tag ubuntu24)
 
 ## #############################################################################
 ## Add specific cmake arguments for configuration step of the project
@@ -72,6 +76,7 @@ function(music_plugins_project)
             -DZLIB_ROOT:PATH=${ZLIB_ROOT}
             -Dlibarchive_ROOT:PATH=${libarchive_ROOT}
             -Dxz_ROOT:PATH=${xz_ROOT}
+            -DONNXRUNTIME_ROOT:PATH=${onnxruntime_ROOT}
             -DUSE_RealTimeWorkspace=${USE_RealTimeWorkspace}
             )
 

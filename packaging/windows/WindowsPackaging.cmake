@@ -108,6 +108,7 @@ list(APPEND libSearchDirs
   ${RPI_ROOT}/bin/Release
   ${ZLIB_ROOT}/bin
   ${qwt_ROOT}/lib
+  ${onnxruntime_ROOT}/bin/Release
   )
 
 set(CPACK_INSTALL_CMAKE_PROJECTS
@@ -116,6 +117,23 @@ set(CPACK_INSTALL_CMAKE_PROJECTS
     )
 
 install(CODE "
+
+file(GLOB_RECURSE itk_files LIST_DIRECTORIES true \"${ITK_ROOT}/bin/*.dll\")
+file(GLOB_RECURSE vtk_files LIST_DIRECTORIES true \"${VTK_ROOT}/bin/*.dll\")
+file(GLOB_RECURSE dtk_files LIST_DIRECTORIES true \"${dtk_ROOT}/bin/*.dll\")
+file(GLOB_RECURSE dcm_files LIST_DIRECTORIES true \"${QtDCM_ROOT}/bin/*.dll\")
+file(GLOB_RECURSE ttk_files LIST_DIRECTORIES true \"${TTK_ROOT}/bin/*.dll\")
+file(GLOB_RECURSE qt5_files LIST_DIRECTORIES true \"${QT_BINARY_DIR}/*.dll\")
+file(GLOB_RECURSE zlib_files LIST_DIRECTORIES true \"${ZLIB_ROOT}/*.dll\")
+file(GLOB_RECURSE onnxruntime_files LIST_DIRECTORIES true \"${onnxruntime_ROOT}/bin/*.dll\")
+list(APPEND files \${itk_files})
+list(APPEND files \${vtk_files})
+list(APPEND files \${dtk_files})
+list(APPEND files \${dcm_files})
+list(APPEND files \${ttk_files})
+list(APPEND files \${qt5_files})
+list(APPEND files \${zlib_files})
+list(APPEND files \${onnxruntime_files})
 
 file(INSTALL ${MEDINRIA_FILES}/
     DESTINATION \${CMAKE_INSTALL_PREFIX}/bin/

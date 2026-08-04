@@ -107,6 +107,7 @@ if(USE_MUSIC_PLUGINS)
         tetgen
         xz
         libarchive
+        onnxruntime
         )
 endif()
 

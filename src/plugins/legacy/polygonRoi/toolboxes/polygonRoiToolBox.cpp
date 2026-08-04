@@ -59,6 +59,7 @@ polygonRoiToolBox::polygonRoiToolBox(QWidget *parent ) :
     auto beginLayout = new QHBoxLayout();
     layout->addLayout(beginLayout);
 
+    // Activation button
     activateTBButton = new QPushButton(tr("Activate Toolbox"));
     activateTBButton->setToolTip(tr("Activate closed polygon mode. You should only have one view."));
     activateTBButton->setCheckable(true);
