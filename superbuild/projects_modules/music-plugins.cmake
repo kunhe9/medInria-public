@@ -45,7 +45,7 @@ function(music_plugins_project)
         #set(git_tag dev)
 
         set(git_url ${GITHUB_PREFIX}kunhe9/music.git)
-        set(git_tag ubuntu24)
+        set(git_tag ubuntu24-dev)
 
 ## #############################################################################
 ## Add specific cmake arguments for configuration step of the project
